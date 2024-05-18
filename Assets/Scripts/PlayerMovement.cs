@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 lookDirection;
     [SerializeField] private Transform crossHair;
     [SerializeField] private LayerMask _aimLayerMask;
+    [SerializeField] private float minAimDistance = 1f;  // Minimum distance to avoid spinning
 
     private void Awake()
     {
@@ -64,13 +65,17 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _aimLayerMask))
         {
             lookDirection = hitInfo.point - transform.position;
-            lookDirection.y = 0;
-            lookDirection.Normalize();
+            float distance = lookDirection.magnitude;
 
-            transform.forward = lookDirection;
+            if (distance > minAimDistance)
+            {
+                lookDirection.y = 0;
+                lookDirection.Normalize();
+                transform.forward = lookDirection;
+            }
 
             if (crossHair != null)
-                crossHair.position = new Vector3(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z);
+                crossHair.position = hitInfo.point;
         }
     }
 
@@ -83,7 +88,6 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
 
         bool playRunAnimation = isRunning && moveInput.magnitude > 0;
-
         animator.SetBool("isRunning", playRunAnimation);
     }
 
