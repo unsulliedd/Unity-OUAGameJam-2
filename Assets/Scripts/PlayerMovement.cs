@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player Components")]
     private PlayerControls controls;
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
@@ -34,14 +35,7 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
         controls.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
 
-        controls.Player.Run.performed += ctx =>
-        {
-            if (moveInput.magnitude > 0)
-            {
-                isRunning = true;
-                _speed = _runSpeed;
-            }
-        };
+        controls.Player.Run.performed += ctx => { isRunning = true; _speed = _runSpeed; };
         controls.Player.Run.canceled += ctx => { isRunning = false; _speed = _walkSpeed; };
     }
 
