@@ -11,7 +11,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 movementDirection;
     private Vector3 verticalMovement;
+    private bool isRunning;
+    private float _speed;
     [SerializeField] private float _walkSpeed = 2f;
+    [SerializeField] private float _runSpeed = 6f;
     [SerializeField] private float _verticalVelocity;
 
     [Header("Player Aim")]
@@ -29,6 +32,21 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
         controls.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
+
+        controls.Player.Run.performed += ctx =>
+        {
+            if (moveInput.magnitude > 0)
+            {
+                isRunning = true;
+                _speed = _runSpeed;
+            }
+        };
+        controls.Player.Run.canceled += ctx => { isRunning = false; _speed = _walkSpeed; };
+    }
+
+    void Start()
+    {
+        _speed = _walkSpeed;
     }
 
     private void Update()
@@ -63,6 +81,10 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("xVelocity", xVelocity, .1f, Time.deltaTime);
         animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
+
+        bool playRunAnimation = isRunning && moveInput.magnitude > 0;
+
+        animator.SetBool("isRunning", playRunAnimation);
     }
 
     private void Movement()
@@ -75,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Transform movement direction based on character orientation
             movementDirection = transform.TransformDirection(movementDirection);
-            characterController.Move(_walkSpeed * Time.deltaTime * movementDirection);
+            characterController.Move(_speed * Time.deltaTime * movementDirection);
         }
 
         // Apply vertical movement
