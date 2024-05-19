@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Player Components")]
+    private Player player;
     private PlayerControls controls;
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
@@ -23,13 +24,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 lookDirection;
     [SerializeField] private Transform crossHair;
     [SerializeField] private LayerMask _aimLayerMask;
-    [SerializeField] private float minAimDistance = 1f;  // Minimum distance to avoid spinning
+    [SerializeField] private float minAimDistance = .1f;  // Minimum distance to avoid spinning
     [SerializeField] private float angleOffset = 40f; 
 
     private void Awake()
     {
-        controls = new PlayerControls();
-
+        player = GetComponent<Player>();
+        controls = player.controls;
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
@@ -75,16 +76,16 @@ public class PlayerMovement : MonoBehaviour
                 lookDirection.y = 0;
                 lookDirection.Normalize();
                 transform.forward = lookDirection;
+
+
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+
+                Quaternion offsetRotation = Quaternion.Euler(0, angleOffset, 0);
+                transform.rotation = targetRotation * offsetRotation;
+
+                if (crossHair != null)
+                    crossHair.position = new Vector3(hitInfo.point.x, crossHair.position.y, hitInfo.point.z);
             }
-
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-
-            // Apply rotation with an offset
-            Quaternion offsetRotation = Quaternion.Euler(0, angleOffset, 0);
-            transform.rotation = targetRotation * offsetRotation;
-
-            if (crossHair != null)
-                crossHair.position = new Vector3(hitInfo.point.x, crossHair.position.y, hitInfo.point.z);
         }
     }
 

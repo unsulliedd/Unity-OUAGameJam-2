@@ -64,7 +64,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""BuildAbilty"",
+                    ""name"": ""BuildMenu"",
                     ""type"": ""Button"",
                     ""id"": ""8fe08e75-440a-48e1-8046-27f31d1a4766"",
                     ""expectedControlType"": ""Button"",
@@ -178,7 +178,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""BuildAbilty"",
+                    ""action"": ""BuildMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -194,6 +194,54 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Building"",
+            ""id"": ""f30e22f6-b6e8-403f-ace1-5974549e1e64"",
+            ""actions"": [
+                {
+                    ""name"": ""Build"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ec3f06a-820b-470e-b8e7-07073d991447"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Button"",
+                    ""id"": ""d29d0cdf-1c10-4cfc-aec4-3a0f03ddc9df"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""408afe3f-1964-4bc9-9342-faf0847f4003"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1cae6fe1-6f47-4928-8770-8d306341c42e"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -204,8 +252,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_SlowTimeAbility = m_Player.FindAction("SlowTimeAbility", throwIfNotFound: true);
-        m_Player_BuildAbilty = m_Player.FindAction("BuildAbilty", throwIfNotFound: true);
+        m_Player_BuildMenu = m_Player.FindAction("BuildMenu", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        // Building
+        m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
+        m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
+        m_Building_Rotate = m_Building.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -271,7 +323,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_SlowTimeAbility;
-    private readonly InputAction m_Player_BuildAbilty;
+    private readonly InputAction m_Player_BuildMenu;
     private readonly InputAction m_Player_Run;
     public struct PlayerActions
     {
@@ -281,7 +333,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
         public InputAction @SlowTimeAbility => m_Wrapper.m_Player_SlowTimeAbility;
-        public InputAction @BuildAbilty => m_Wrapper.m_Player_BuildAbilty;
+        public InputAction @BuildMenu => m_Wrapper.m_Player_BuildMenu;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -304,9 +356,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SlowTimeAbility.started += instance.OnSlowTimeAbility;
             @SlowTimeAbility.performed += instance.OnSlowTimeAbility;
             @SlowTimeAbility.canceled += instance.OnSlowTimeAbility;
-            @BuildAbilty.started += instance.OnBuildAbilty;
-            @BuildAbilty.performed += instance.OnBuildAbilty;
-            @BuildAbilty.canceled += instance.OnBuildAbilty;
+            @BuildMenu.started += instance.OnBuildMenu;
+            @BuildMenu.performed += instance.OnBuildMenu;
+            @BuildMenu.canceled += instance.OnBuildMenu;
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
@@ -326,9 +378,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SlowTimeAbility.started -= instance.OnSlowTimeAbility;
             @SlowTimeAbility.performed -= instance.OnSlowTimeAbility;
             @SlowTimeAbility.canceled -= instance.OnSlowTimeAbility;
-            @BuildAbilty.started -= instance.OnBuildAbilty;
-            @BuildAbilty.performed -= instance.OnBuildAbilty;
-            @BuildAbilty.canceled -= instance.OnBuildAbilty;
+            @BuildMenu.started -= instance.OnBuildMenu;
+            @BuildMenu.performed -= instance.OnBuildMenu;
+            @BuildMenu.canceled -= instance.OnBuildMenu;
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
@@ -349,13 +401,72 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Building
+    private readonly InputActionMap m_Building;
+    private List<IBuildingActions> m_BuildingActionsCallbackInterfaces = new List<IBuildingActions>();
+    private readonly InputAction m_Building_Build;
+    private readonly InputAction m_Building_Rotate;
+    public struct BuildingActions
+    {
+        private @PlayerControls m_Wrapper;
+        public BuildingActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Build => m_Wrapper.m_Building_Build;
+        public InputAction @Rotate => m_Wrapper.m_Building_Rotate;
+        public InputActionMap Get() { return m_Wrapper.m_Building; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(BuildingActions set) { return set.Get(); }
+        public void AddCallbacks(IBuildingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BuildingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Add(instance);
+            @Build.started += instance.OnBuild;
+            @Build.performed += instance.OnBuild;
+            @Build.canceled += instance.OnBuild;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
+        }
+
+        private void UnregisterCallbacks(IBuildingActions instance)
+        {
+            @Build.started -= instance.OnBuild;
+            @Build.performed -= instance.OnBuild;
+            @Build.canceled -= instance.OnBuild;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
+        }
+
+        public void RemoveCallbacks(IBuildingActions instance)
+        {
+            if (m_Wrapper.m_BuildingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IBuildingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BuildingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public BuildingActions @Building => new BuildingActions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnSlowTimeAbility(InputAction.CallbackContext context);
-        void OnBuildAbilty(InputAction.CallbackContext context);
+        void OnBuildMenu(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+    }
+    public interface IBuildingActions
+    {
+        void OnBuild(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }

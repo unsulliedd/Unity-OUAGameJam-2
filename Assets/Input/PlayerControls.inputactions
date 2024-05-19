@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "BuildAbilty",
+                    "name": "BuildMenu",
                     "type": "Button",
                     "id": "8fe08e75-440a-48e1-8046-27f31d1a4766",
                     "expectedControlType": "Button",
@@ -156,7 +156,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "BuildAbilty",
+                    "action": "BuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -168,6 +168,54 @@
                     "processors": "",
                     "groups": "",
                     "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Building",
+            "id": "f30e22f6-b6e8-403f-ace1-5974549e1e64",
+            "actions": [
+                {
+                    "name": "Build",
+                    "type": "Button",
+                    "id": "6ec3f06a-820b-470e-b8e7-07073d991447",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "d29d0cdf-1c10-4cfc-aec4-3a0f03ddc9df",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "408afe3f-1964-4bc9-9342-faf0847f4003",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Build",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cae6fe1-6f47-4928-8770-8d306341c42e",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
