@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform crossHair;
     [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] private float minAimDistance = 1f;  // Minimum distance to avoid spinning
+    [SerializeField] private float angleOffset = 40f; 
 
     private void Awake()
     {
@@ -68,12 +69,19 @@ public class PlayerMovement : MonoBehaviour
             lookDirection = hitInfo.point - transform.position;
             float distance = lookDirection.magnitude;
 
+
             if (distance > minAimDistance)
             {
                 lookDirection.y = 0;
                 lookDirection.Normalize();
                 transform.forward = lookDirection;
             }
+
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+
+            // Apply rotation with an offset
+            Quaternion offsetRotation = Quaternion.Euler(0, angleOffset, 0);
+            transform.rotation = targetRotation * offsetRotation;
 
             if (crossHair != null)
                 crossHair.position = new Vector3(hitInfo.point.x, crossHair.position.y, hitInfo.point.z);
