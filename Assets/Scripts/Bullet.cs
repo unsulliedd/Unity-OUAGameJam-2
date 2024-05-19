@@ -5,25 +5,21 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float life = 5;
+    private Rigidbody rb;
 
-    private void Awake()
+    void Awake()
     {
-        Destroy(gameObject, life);
+        rb = GetComponent<Rigidbody>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        { Destroy(gameObject);
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+            //Damage enemy
         }
         else
-        {
-             Destroy(collision.gameObject);
-             Destroy(gameObject);
-        }
-
-       
+             Destroy(gameObject, 7);
     }
 }
-
