@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,11 +24,26 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform crossHair;
     [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] private float minAimDistance = .1f;  // Minimum distance to avoid spinning
-    [SerializeField] private float angleOffset = 40f; 
+    [SerializeField] private float angleOffset = 40f;
 
-    private void Awake()
+    void Start()
     {
-        player = GetComponent<Player>();
+        if (TryGetComponent(out player))
+        {
+            AssignControls();
+        }
+        _speed = _walkSpeed;
+    }
+
+
+    private void Update()
+    {
+        Movement();
+        Look();
+        AnimatorControl();
+    }
+    private void AssignControls()
+    {
         controls = player.controls;
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
@@ -39,25 +53,6 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Run.performed += ctx => { isRunning = true; _speed = _runSpeed; };
         controls.Player.Run.canceled += ctx => { isRunning = false; _speed = _walkSpeed; };
-
-        controls.Player.Fire.performed += ctx => Fire();
-    }
-
-    void Start()
-    {
-        _speed = _walkSpeed;
-    }
-
-    private void Update()
-    {
-        Movement();
-        Look();
-        AnimatorControl();
-    }
-
-    private void Fire()
-    {
-        animator.SetTrigger("Fire");
     }
 
     private void Look()
@@ -70,13 +65,11 @@ public class PlayerMovement : MonoBehaviour
             lookDirection = hitInfo.point - transform.position;
             float distance = lookDirection.magnitude;
 
-
             if (distance > minAimDistance)
             {
                 lookDirection.y = 0;
                 lookDirection.Normalize();
                 transform.forward = lookDirection;
-
 
                 Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
 
@@ -125,15 +118,5 @@ public class PlayerMovement : MonoBehaviour
         else
             _verticalVelocity -= 9.81f * Time.deltaTime;
         verticalMovement = new Vector3(0, _verticalVelocity, 0);
-    }
-
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
     }
 }

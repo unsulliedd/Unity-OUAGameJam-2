@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SlowTimeAbility",
+                    "name": "StopTimeAbility",
                     "type": "Button",
                     "id": "5166ba82-300e-4655-aa44-11db84afbc5f",
                     "expectedControlType": "Button",
@@ -145,7 +145,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SlowTimeAbility",
+                    "action": "StopTimeAbility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

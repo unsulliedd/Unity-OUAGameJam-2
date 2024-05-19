@@ -13,17 +13,47 @@ public class PlayerBuilding : MonoBehaviour
     private GameObject buildingPreviewInstance;
     private UIManager uiManager;
 
-    void Awake()
+    private void Awake()
+    {
+        if (buildingPrefabs == null || buildingPrefabs.Length == 0)
+        {
+            Debug.LogError("Building prefabs are not set.");
+        }
+    }
+
+    private void Start()
     {
         player = GetComponent<Player>();
         uiManager = FindObjectOfType<UIManager>();
 
-        player.controls.Player.BuildMenu.performed += ctx => OpenBuildMenu();
-        player.controls.Building.Build.performed += ctx => PlaceBuilding();
-        player.controls.Building.Rotate.performed += ctx => RotatePreview();
+        if (uiManager == null)
+        {
+            Debug.LogError("UIManager is not found.");
+        }
+
+        if (player != null)
+        {
+            player.controls.Player.BuildMenu.performed += ctx => OpenBuildMenu();
+            player.controls.Building.Build.performed += ctx => PlaceBuilding();
+            player.controls.Building.Rotate.performed += ctx => RotatePreview();
+        }
+        else
+        {
+            Debug.LogError("Player component is not found.");
+        }
     }
 
-    void Update()
+    private void OnDestroy()
+    {
+        if (player != null)
+        {
+            player.controls.Player.BuildMenu.performed -= ctx => OpenBuildMenu();
+            player.controls.Building.Build.performed -= ctx => PlaceBuilding();
+            player.controls.Building.Rotate.performed -= ctx => RotatePreview();
+        }
+    }
+
+    private void Update()
     {
         if (buildingPreviewInstance != null)
             UpdateBuildingPreviewPosition();
@@ -32,6 +62,7 @@ public class PlayerBuilding : MonoBehaviour
     public void SetBuildingIndex(int index)
     {
         buildingIndex = index;
+
         if (buildingPreviewInstance != null)
             Destroy(buildingPreviewInstance);
 
@@ -44,26 +75,28 @@ public class PlayerBuilding : MonoBehaviour
 
     private void UpdateBuildingPreviewPosition()
     {
+        if (Camera.main == null) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, buildableLayerMask))
         {
             Vector3 buildPosition = hit.point;
-            buildPosition.y = hit.point.y;  // Snap to ground level
-            buildPosition.y += previewHeight;
+            buildPosition.y = hit.point.y + previewHeight;
 
             bool isNearAnotherBuilding = CheckNearbyBuildings(buildPosition);
             if (isNearAnotherBuilding)
             {
-                // Snap to nearby building
                 Vector3 snapPosition = FindSnapPosition(buildPosition);
                 buildingPreviewInstance.transform.position = snapPosition;
             }
             else
+            {
                 buildingPreviewInstance.transform.position = buildPosition;
+            }
         }
     }
 
-    public void RotatePreview()
+    private void RotatePreview()
     {
         if (buildingPreviewInstance != null)
             buildingPreviewInstance.transform.Rotate(Vector3.up, 90f);
@@ -99,12 +132,18 @@ public class PlayerBuilding : MonoBehaviour
     {
         if (buildingPreviewInstance != null)
         {
-            Transform obstacleParent = GameObject.Find("Obstacle").transform;
+            Transform obstacleParent = GameObject.Find("Obstacle")?.transform;
+            if (obstacleParent == null)
+            {
+                Debug.LogError("Obstacle parent transform is not found.");
+                return;
+            }
 
             Instantiate(buildingPrefabs[buildingIndex], buildingPreviewInstance.transform.position, buildingPreviewInstance.transform.rotation, obstacleParent);
             Destroy(buildingPreviewInstance);
             buildingPreviewInstance = null;
             buildingIndex = -1;
+            player.controls.Player.Enable();
         }
     }
 
@@ -113,28 +152,16 @@ public class PlayerBuilding : MonoBehaviour
         Collider[] colliders = building.GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
         {
-            if (isPreview)
-            {
-                collider.gameObject.layer = LayerMask.NameToLayer("Preview");
-            }
-            else
-            {
-                collider.gameObject.layer = LayerMask.NameToLayer("Obstacles");
-            }
+            collider.gameObject.layer = isPreview ? LayerMask.NameToLayer("Preview") : LayerMask.NameToLayer("Obstacles");
         }
     }
 
     private void OpenBuildMenu()
     {
-        uiManager.OpenBuildMenu();
-    }
-
-    public void ExitBuildMode()
-    {
-        if (buildingPreviewInstance != null)
+        if (uiManager != null)
         {
-            Destroy(buildingPreviewInstance);
+            player.controls.Player.Disable();
+            uiManager.OpenBuildMenu();
         }
-        buildingIndex = -1;
     }
 }

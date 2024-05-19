@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Scripts/Player.cs.meta
 guid: bf6f28eaefa37ea49b4be38b3b8cc935
-========
-guid: 2a54c0b2b51218646934953f935c177b
->>>>>>>> Add-Bullet:Assets/Scripts/Bullet.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

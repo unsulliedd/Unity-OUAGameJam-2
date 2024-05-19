@@ -55,7 +55,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""SlowTimeAbility"",
+                    ""name"": ""StopTimeAbility"",
                     ""type"": ""Button"",
                     ""id"": ""5166ba82-300e-4655-aa44-11db84afbc5f"",
                     ""expectedControlType"": ""Button"",
@@ -167,7 +167,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SlowTimeAbility"",
+                    ""action"": ""StopTimeAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -251,7 +251,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
-        m_Player_SlowTimeAbility = m_Player.FindAction("SlowTimeAbility", throwIfNotFound: true);
+        m_Player_StopTimeAbility = m_Player.FindAction("StopTimeAbility", throwIfNotFound: true);
         m_Player_BuildMenu = m_Player.FindAction("BuildMenu", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         // Building
@@ -322,7 +322,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Aim;
-    private readonly InputAction m_Player_SlowTimeAbility;
+    private readonly InputAction m_Player_StopTimeAbility;
     private readonly InputAction m_Player_BuildMenu;
     private readonly InputAction m_Player_Run;
     public struct PlayerActions
@@ -332,7 +332,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
-        public InputAction @SlowTimeAbility => m_Wrapper.m_Player_SlowTimeAbility;
+        public InputAction @StopTimeAbility => m_Wrapper.m_Player_StopTimeAbility;
         public InputAction @BuildMenu => m_Wrapper.m_Player_BuildMenu;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -353,9 +353,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
-            @SlowTimeAbility.started += instance.OnSlowTimeAbility;
-            @SlowTimeAbility.performed += instance.OnSlowTimeAbility;
-            @SlowTimeAbility.canceled += instance.OnSlowTimeAbility;
+            @StopTimeAbility.started += instance.OnStopTimeAbility;
+            @StopTimeAbility.performed += instance.OnStopTimeAbility;
+            @StopTimeAbility.canceled += instance.OnStopTimeAbility;
             @BuildMenu.started += instance.OnBuildMenu;
             @BuildMenu.performed += instance.OnBuildMenu;
             @BuildMenu.canceled += instance.OnBuildMenu;
@@ -375,9 +375,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
-            @SlowTimeAbility.started -= instance.OnSlowTimeAbility;
-            @SlowTimeAbility.performed -= instance.OnSlowTimeAbility;
-            @SlowTimeAbility.canceled -= instance.OnSlowTimeAbility;
+            @StopTimeAbility.started -= instance.OnStopTimeAbility;
+            @StopTimeAbility.performed -= instance.OnStopTimeAbility;
+            @StopTimeAbility.canceled -= instance.OnStopTimeAbility;
             @BuildMenu.started -= instance.OnBuildMenu;
             @BuildMenu.performed -= instance.OnBuildMenu;
             @BuildMenu.canceled -= instance.OnBuildMenu;
@@ -460,7 +460,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
-        void OnSlowTimeAbility(InputAction.CallbackContext context);
+        void OnStopTimeAbility(InputAction.CallbackContext context);
         void OnBuildMenu(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
     }
