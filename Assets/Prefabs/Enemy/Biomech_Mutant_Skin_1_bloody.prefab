@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 7365748923767361718}
   m_Layer: 0
   m_Name: Biomech_Mutant_Skin_1_bloody
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
