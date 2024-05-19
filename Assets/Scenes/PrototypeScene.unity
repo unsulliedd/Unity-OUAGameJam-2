@@ -952,6 +952,7 @@ GameObject:
   - component: {fileID: 234660517}
   - component: {fileID: 234660512}
   - component: {fileID: 234660516}
+  - component: {fileID: 234660518}
   - component: {fileID: 234660511}
   m_Layer: 8
   m_Name: Player
@@ -1097,6 +1098,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6f28eaefa37ea49b4be38b3b8cc935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &234660518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234660510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3800f3fe038faa649883b76d7e63aeab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityDuration: 10
+  isTimeStopped: 0
+  isTimeSlowed: 0
+  slowTimeScale: 0.5
+  stopTimeFx: {fileID: 4932088507883938021, guid: ed407826bf9451d43b18abecdba63c63,
+    type: 3}
+  slowTimeFx: {fileID: 4932088507883938021, guid: 0e5709a7ddb77924090c112cf73bb98a,
+    type: 3}
 --- !u!1001 &255554938
 PrefabInstance:
   m_ObjectHideFlags: 0

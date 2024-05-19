@@ -114,6 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1915238213067902865}
+  - component: {fileID: 1826114231641141890}
   m_Layer: 7
   m_Name: Obstacle Type 5
   m_TagString: Untagged
@@ -139,6 +140,21 @@ Transform:
   - {fileID: 4804167210727670821}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1826114231641141890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783102831616988861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2462737c9d783d147a2ca69eed025dc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  explosionFx: {fileID: 358637981425055526, guid: 18deda9c496cf364c9362f77efcd6b8d,
+    type: 3}
 --- !u!1 &5774656167768996983
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerTimeAbility : MonoBehaviour
 {
     private Player player;
-    private float abilityDuration = 10f;
-    private bool isTimeStopped = false;
-    private bool isTimeSlowed = false;
-    private float slowTimeScale = 0.5f; // 50% speed
+    [SerializeField] private float abilityDuration = 10f;
+    [SerializeField] private bool isTimeStopped = false;
+    [SerializeField] private bool isTimeSlowed = false;
+    [SerializeField] private float slowTimeScale = 0.5f; // 50% speed
+    [SerializeField] private GameObject stopTimeFx;
+    [SerializeField] private GameObject slowTimeFx;
 
     void Start()
     {
@@ -19,6 +21,8 @@ public class PlayerTimeAbility : MonoBehaviour
 
     private void UseTimeStopAbility()
     {
+        CreateStopTimeFx();
+
         if (isTimeStopped)
             ResumeTime();
         else
@@ -43,6 +47,8 @@ public class PlayerTimeAbility : MonoBehaviour
 
     private void UseTimeSlowAbility()
     {
+        CreateSlowTimeFx();
+
         if (isTimeSlowed)
             ResumeTime();
         else
@@ -79,5 +85,19 @@ public class PlayerTimeAbility : MonoBehaviour
             Time.timeScale = 1f;
             Time.fixedDeltaTime = 0.02f;
         }
+    }
+
+    private void CreateStopTimeFx()
+    {
+        GameObject newStopTimeFx = Instantiate(stopTimeFx, transform.position, Quaternion.identity);
+        newStopTimeFx.transform.parent = transform;
+        Destroy(newStopTimeFx, 10f);
+    }
+
+    private void CreateSlowTimeFx()
+    {
+        GameObject newSlowTimeFx = Instantiate(slowTimeFx, transform.position, Quaternion.identity);
+        newSlowTimeFx.transform.parent = transform; 
+        Destroy(newSlowTimeFx, 10f);
     }
 }
