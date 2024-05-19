@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player Components")]
     private PlayerControls controls;
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
@@ -11,7 +12,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 movementDirection;
     private Vector3 verticalMovement;
+    private bool isRunning;
+    private float _speed;
     [SerializeField] private float _walkSpeed = 2f;
+    [SerializeField] private float _runSpeed = 5f;
     [SerializeField] private float _verticalVelocity;
 
     [Header("Player Aim")]
@@ -19,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 lookDirection;
     [SerializeField] private Transform crossHair;
     [SerializeField] private LayerMask _aimLayerMask;
+    [SerializeField] private float minAimDistance = 1f;  // Minimum distance to avoid spinning
 
     private void Awake()
     {
@@ -29,6 +34,16 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
         controls.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
+
+        controls.Player.Run.performed += ctx => { isRunning = true; _speed = _runSpeed; };
+        controls.Player.Run.canceled += ctx => { isRunning = false; _speed = _walkSpeed; };
+
+        controls.Player.Fire.performed += ctx => Fire();
+    }
+
+    void Start()
+    {
+        _speed = _walkSpeed;
     }
 
     private void Update()
@@ -36,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
         Movement();
         Look();
         AnimatorControl();
+    }
+
+    private void Fire()
+    {
+        animator.SetTrigger("Fire");
     }
 
     private void Look()
@@ -46,13 +66,17 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _aimLayerMask))
         {
             lookDirection = hitInfo.point - transform.position;
-            lookDirection.y = 0;
-            lookDirection.Normalize();
+            float distance = lookDirection.magnitude;
 
-            transform.forward = lookDirection;
+            if (distance > minAimDistance)
+            {
+                lookDirection.y = 0;
+                lookDirection.Normalize();
+                transform.forward = lookDirection;
+            }
 
             if (crossHair != null)
-                crossHair.position = new Vector3(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z);
+                crossHair.position = new Vector3(hitInfo.point.x, crossHair.position.y, hitInfo.point.z);
         }
     }
 
@@ -63,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("xVelocity", xVelocity, .1f, Time.deltaTime);
         animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
+
+        bool playRunAnimation = isRunning && moveInput.magnitude > 0;
+        animator.SetBool("isRunning", playRunAnimation);
     }
 
     private void Movement()
@@ -75,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Transform movement direction based on character orientation
             movementDirection = transform.TransformDirection(movementDirection);
-            characterController.Move(_walkSpeed * Time.deltaTime * movementDirection);
+            characterController.Move(_speed * Time.deltaTime * movementDirection);
         }
 
         // Apply vertical movement
