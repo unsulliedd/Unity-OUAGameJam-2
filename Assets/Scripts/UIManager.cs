@@ -23,15 +23,9 @@ public class UIManager : MonoBehaviour
         CloseBuildMenu();
     }
 
-    public void OpenBuildMenu()
-    {
-        buildMenuPanel.SetActive(true);
-    }
+    public void OpenBuildMenu() => buildMenuPanel.SetActive(true);
 
-    public void CloseBuildMenu()
-    {
-        buildMenuPanel.SetActive(false);
-    }
+    public void CloseBuildMenu() => buildMenuPanel.SetActive(false);
 
     public void UpdateHealthText(int health)
     {

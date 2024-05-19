@@ -9,13 +9,13 @@ public class WeaponController : MonoBehaviour
     private Player player;
     private Animator animator;
 
-    private void Awake()
+    void Awake()
     {
         audioSource = GetComponent<AudioSource>();
         animator = GetComponentInParent<Animator>();
     }
 
-    private void Start()
+    void Start()
     {
         player = GetComponentInParent<Player>();
         audioSource.clip = shootingSound;

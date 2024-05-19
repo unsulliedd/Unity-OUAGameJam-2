@@ -29,19 +29,19 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         if (TryGetComponent(out player))
-        {
             AssignControls();
-        }
+
         _speed = _walkSpeed;
     }
 
 
-    private void Update()
+    void Update()
     {
         Movement();
         Look();
         AnimatorControl();
     }
+
     private void AssignControls()
     {
         controls = player.controls;

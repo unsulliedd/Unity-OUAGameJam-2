@@ -13,23 +13,13 @@ public class PlayerBuilding : MonoBehaviour
     private GameObject buildingPreviewInstance;
     private UIManager uiManager;
 
-    private void Awake()
-    {
-        if (buildingPrefabs == null || buildingPrefabs.Length == 0)
-        {
-            Debug.LogError("Building prefabs are not set.");
-        }
-    }
-
-    private void Start()
+    void Start()
     {
         player = GetComponent<Player>();
         uiManager = FindObjectOfType<UIManager>();
 
         if (uiManager == null)
-        {
             Debug.LogError("UIManager is not found.");
-        }
 
         if (player != null)
         {
@@ -38,22 +28,10 @@ public class PlayerBuilding : MonoBehaviour
             player.controls.Building.Rotate.performed += ctx => RotatePreview();
         }
         else
-        {
             Debug.LogError("Player component is not found.");
-        }
     }
 
-    private void OnDestroy()
-    {
-        if (player != null)
-        {
-            player.controls.Player.BuildMenu.performed -= ctx => OpenBuildMenu();
-            player.controls.Building.Build.performed -= ctx => PlaceBuilding();
-            player.controls.Building.Rotate.performed -= ctx => RotatePreview();
-        }
-    }
-
-    private void Update()
+    void Update()
     {
         if (buildingPreviewInstance != null)
             UpdateBuildingPreviewPosition();
@@ -90,9 +68,7 @@ public class PlayerBuilding : MonoBehaviour
                 buildingPreviewInstance.transform.position = snapPosition;
             }
             else
-            {
                 buildingPreviewInstance.transform.position = buildPosition;
-            }
         }
     }
 
@@ -132,15 +108,11 @@ public class PlayerBuilding : MonoBehaviour
     {
         if (buildingPreviewInstance != null)
         {
-            Transform obstacleParent = GameObject.Find("Obstacle")?.transform;
-            if (obstacleParent == null)
-            {
-                Debug.LogError("Obstacle parent transform is not found.");
-                return;
-            }
+            Transform obstacleParent = GameObject.Find("Obstacle").transform;
 
             Instantiate(buildingPrefabs[buildingIndex], buildingPreviewInstance.transform.position, buildingPreviewInstance.transform.rotation, obstacleParent);
             Destroy(buildingPreviewInstance);
+
             buildingPreviewInstance = null;
             buildingIndex = -1;
             player.controls.Player.Enable();
@@ -151,9 +123,7 @@ public class PlayerBuilding : MonoBehaviour
     {
         Collider[] colliders = building.GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
-        {
             collider.gameObject.layer = isPreview ? LayerMask.NameToLayer("Preview") : LayerMask.NameToLayer("Obstacles");
-        }
     }
 
     private void OpenBuildMenu()
