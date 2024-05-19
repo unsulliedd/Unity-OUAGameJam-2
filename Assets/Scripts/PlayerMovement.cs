@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isRunning;
     private float _speed;
     [SerializeField] private float _walkSpeed = 2f;
-    [SerializeField] private float _runSpeed = 6f;
+    [SerializeField] private float _runSpeed = 5f;
     [SerializeField] private float _verticalVelocity;
 
     [Header("Player Aim")]
@@ -37,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Run.performed += ctx => { isRunning = true; _speed = _runSpeed; };
         controls.Player.Run.canceled += ctx => { isRunning = false; _speed = _walkSpeed; };
+
+        controls.Player.Fire.performed += ctx => Fire();
     }
 
     void Start()
@@ -49,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
         Movement();
         Look();
         AnimatorControl();
+    }
+
+    private void Fire()
+    {
+        animator.SetTrigger("Fire");
     }
 
     private void Look()
@@ -69,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             if (crossHair != null)
-                crossHair.position = hitInfo.point;
+                crossHair.position = new Vector3(hitInfo.point.x, crossHair.position.y, hitInfo.point.z);
         }
     }
 
