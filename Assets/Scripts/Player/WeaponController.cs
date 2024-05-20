@@ -9,7 +9,6 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private float bulletSpeed = 60f;
     [SerializeField] private AudioClip shootingSound;
     [SerializeField] private int ammoCapacity = 60;
-    [SerializeField] private float reloadTime = 1f;
 
     [Header("References")]
     private AudioSource audioSource;
