@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
@@ -23,7 +21,7 @@ public class WeaponController : MonoBehaviour
 
     void Start()
     {
-        player = GetComponentInParent<Player>();
+        player = GetComponent<Player>();
         audioSource.clip = shootingSound;
 
         player.controls.Player.Fire.performed += ctx => Shoot();
@@ -33,7 +31,7 @@ public class WeaponController : MonoBehaviour
 
     private void Shoot()
     {
-        if (!PlayerAnimation.Instance.CheckReloadAnimPlaying())
+        if (PlayerAnimation.Instance.CheckReloadAnimPlaying())
             return;
 
         audioSource.Play();

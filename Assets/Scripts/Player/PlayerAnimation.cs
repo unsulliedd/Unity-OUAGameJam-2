@@ -21,6 +21,7 @@ public class PlayerAnimation : MonoBehaviour
     public bool CheckReloadAnimPlaying()
     {
         bool reloadAnim = animator.GetCurrentAnimatorStateInfo(1).IsName("Reloading");
+        Debug.Log(reloadAnim);
         return reloadAnim;
     }
 }
