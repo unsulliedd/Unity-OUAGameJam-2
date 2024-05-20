@@ -8,25 +8,52 @@ public class PlayerTimeAbility : MonoBehaviour
     [SerializeField] private float abilityDuration = 10f;
     [SerializeField] private bool isTimeStopped = false;
     [SerializeField] private bool isTimeSlowed = false;
+    [SerializeField] private bool isTimeStopActive = false;
+    [SerializeField] private bool isTimeSlowActive = false;
     [SerializeField] private float slowTimeScale = 0.5f; // 50% speed
     [SerializeField] private GameObject stopTimeFx;
     [SerializeField] private GameObject slowTimeFx;
+    private UIManager uIManager;
+    private float time;
 
     void Start()
     {
+        uIManager = FindObjectOfType<UIManager>();
         player = GetComponent<Player>();
         player.controls.Player.StopTimeAbility.performed += ctx => UseTimeStopAbility();
         player.controls.Player.SlowTimeAbility.performed += ctx => UseTimeSlowAbility();
+        time = abilityDuration;
+    }
+
+    private void Update()
+    {
+        if (isTimeStopActive || isTimeStopActive)
+        {
+            time -= Time.deltaTime;
+            int remainingTime = Mathf.CeilToInt(time);
+            uIManager.UpdateTimeAbilityText(remainingTime);
+        }
+        else
+        {
+            time = abilityDuration;
+            uIManager.UpdateTimeAbilityText(time);
+        }
+            
     }
 
     private void UseTimeStopAbility()
     {
-        CreateStopTimeFx();
-
-        if (isTimeStopped)
-            ResumeTime();
+        if (isTimeSlowActive)
+            return;
         else
-            StartCoroutine(StopTime());
+        {
+            CreateStopTimeFx();
+            isTimeStopActive = true;
+            if (isTimeStopped)
+                ResumeTime();
+            else
+                StartCoroutine(StopTime());
+        }
     }
 
     private IEnumerator StopTime()
@@ -43,16 +70,22 @@ public class PlayerTimeAbility : MonoBehaviour
             timeAffectable.ResumeTime();
 
         isTimeStopped = false;
+        isTimeStopActive = false;
     }
 
     private void UseTimeSlowAbility()
     {
-        CreateSlowTimeFx();
-
-        if (isTimeSlowed)
-            ResumeTime();
+        if (isTimeStopActive)
+            return;
         else
-            StartCoroutine(SlowTime());
+        {
+            CreateSlowTimeFx();
+            isTimeSlowActive = true;
+            if (isTimeSlowed)
+                ResumeTime();
+            else
+                StartCoroutine(SlowTime());
+        }
     }
 
     private IEnumerator SlowTime()
@@ -67,6 +100,7 @@ public class PlayerTimeAbility : MonoBehaviour
         Time.fixedDeltaTime = 0.02f;
 
         isTimeSlowed = false;
+        isTimeSlowActive = false;
     }
 
     private void ResumeTime()

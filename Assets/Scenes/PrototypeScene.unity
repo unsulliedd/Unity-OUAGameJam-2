@@ -1113,6 +1113,8 @@ MonoBehaviour:
   abilityDuration: 10
   isTimeStopped: 0
   isTimeSlowed: 0
+  isTimeStopActive: 0
+  isTimeSlowActive: 0
   slowTimeScale: 0.5
   stopTimeFx: {fileID: 4932088507883938021, guid: ed407826bf9451d43b18abecdba63c63,
     type: 3}
@@ -1621,6 +1623,8 @@ MonoBehaviour:
   bulletSpawnPoint: {fileID: 1560505156}
   bulletSpeed: 60
   shootingSound: {fileID: 8300000, guid: 8602b7d5cd15c1943a50aa53f171c8cf, type: 3}
+  ammoCapacity: 60
+  reloadTime: 5
 --- !u!82 &509758453
 AudioSource:
   m_ObjectHideFlags: 0

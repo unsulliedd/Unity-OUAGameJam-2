@@ -89,6 +89,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""327acae3-b1b5-4b98-adc3-12eca112f831"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""SlowTimeAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68ed88a0-d2f7-41ce-aede-ee164d3ead09"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -275,6 +295,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_BuildMenu = m_Player.FindAction("BuildMenu", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_SlowTimeAbility = m_Player.FindAction("SlowTimeAbility", throwIfNotFound: true);
+        m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         // Building
         m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
         m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
@@ -347,6 +368,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_BuildMenu;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_SlowTimeAbility;
+    private readonly InputAction m_Player_Reload;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -358,6 +380,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @BuildMenu => m_Wrapper.m_Player_BuildMenu;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @SlowTimeAbility => m_Wrapper.m_Player_SlowTimeAbility;
+        public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -388,6 +411,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SlowTimeAbility.started += instance.OnSlowTimeAbility;
             @SlowTimeAbility.performed += instance.OnSlowTimeAbility;
             @SlowTimeAbility.canceled += instance.OnSlowTimeAbility;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -413,6 +439,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SlowTimeAbility.started -= instance.OnSlowTimeAbility;
             @SlowTimeAbility.performed -= instance.OnSlowTimeAbility;
             @SlowTimeAbility.canceled -= instance.OnSlowTimeAbility;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -493,6 +522,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnBuildMenu(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnSlowTimeAbility(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IBuildingActions
     {
