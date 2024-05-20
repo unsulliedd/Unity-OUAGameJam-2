@@ -33,9 +33,9 @@ public class WeaponController : MonoBehaviour
 
     private void Shoot()
     {
-        if (PlayerAnimation.Instance.CheckReloadAnimPlaying())
+        if (!PlayerAnimation.Instance.CheckReloadAnimPlaying())
             return;
-            
+
         audioSource.Play();
         PlayerAnimation.Instance.FireAnim();
 
